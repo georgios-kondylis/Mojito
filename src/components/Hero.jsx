@@ -1,19 +1,28 @@
-import React from "react";
 import { useGSAP } from "@gsap/react";
-import { SplitText } from "gsap/all";
 import gsap from "gsap";
+import { SplitText } from "gsap/all";
+import { useRef } from "react";
+import { useMediaQuery } from "react-responsive";
 
 const Hero = () => {
-  useGSAP(() => {
-    const heroSplit = new SplitText(".title", { type: "chars, words" });
-    const paragraphSplit = new SplitText(".subtitle", { type: "lines" });
+  const videoRef = useRef();
 
-    heroSplit.chars.forEach((char) => char.classList.add("text-gradient"));
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+
+  useGSAP(() => {
+    const heroSplit = new SplitText(".title", {
+      type: "chars, words",
+    });
+
+    const paragraphSplit = new SplitText(".subtitle", {
+      type: "lines",
+    });
+
+    heroSplit.chars.forEach((char) => char.classList.add("text-gradient")); // Apply text-gradient class once before animating
 
     gsap.from(heroSplit.chars, {
-      opacity: 0,
       yPercent: 100,
-      duration: 2,
+      duration: 1.8,
       ease: "expo.out",
       stagger: 0.06,
     });
@@ -21,23 +30,42 @@ const Hero = () => {
     gsap.from(paragraphSplit.lines, {
       opacity: 0,
       yPercent: 100,
-      duration: 2,
+      duration: 1.8,
       ease: "expo.out",
       stagger: 0.06,
-      delay: 0.8,
+      delay: 1,
     });
 
-    gsap
-      .timeline({
+    gsap.timeline({
         scrollTrigger: {
-          trigger: "#hero", // The element that triggers the scroll animation (your Hero section)
-          start: "top top", // Start the animation when the top of #hero reaches the top of the viewport
-          end: "bottom top", // End the animation when the bottom of #hero touches the top of the viewport
-          scrub: true, // Sync the animation progress with the scroll position (smooth scrolling animation)
+          trigger: "#hero",
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
         },
       })
       .to(".right-leaf", { y: 200 }, 0)
-      .to(".left-leaf", { y: -200 }, 0); // 0 = start this animation at the beginning of the timeline instead of after the first animation completes
+      .to(".left-leaf", { y: -200 }, 0)
+      .to(".arrow", { y: 100 }, 0);
+
+    const startValue = isMobile ? "top 50%" : "center 60%";
+    const endValue = isMobile ? "120% top" : "bottom top";
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: "video",
+        start: startValue,
+        end: endValue,
+        scrub: true,
+        pin: true,
+      },
+    });
+
+    videoRef.current.onloadedmetadata = () => {
+      tl.to(videoRef.current, {
+        currentTime: videoRef.current.duration,
+      });
+    };
   }, []);
 
   return (
@@ -57,6 +85,8 @@ const Hero = () => {
         />
 
         <div className="body">
+          <img src="/images/arrow.png" alt="arrow" className="arrow" />
+
           <div className="content">
             <div className="space-y-5 hidden md:block">
               <p>Cool. Crisp. Classic.</p>
@@ -76,6 +106,16 @@ const Hero = () => {
           </div>
         </div>
       </section>
+
+      <div className="video absolute inset-0">
+        <video
+          ref={videoRef}
+          muted
+          playsInline
+          preload="auto"
+          src="/videos/output.mp4"
+        />
+      </div>
     </>
   );
 };
