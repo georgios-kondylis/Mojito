@@ -1,8 +1,7 @@
 import React from "react";
 import gsap from "gsap";
 import { ScrollTrigger, SplitText } from "gsap/all";
-import { Navbar, Hero } from "./components/exports";
-import Cocktails from "./components/Cocktails";
+import { Navbar, Hero, Cocktails, About } from "./components/exports";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -12,6 +11,7 @@ const App = () => {
       <Navbar />
       <Hero />
       <Cocktails />
+      <About />
     </>
   );
 };
