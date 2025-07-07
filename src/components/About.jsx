@@ -5,23 +5,6 @@ import { useGSAP } from "@gsap/react";
 gsap.registerPlugin(ScrollTrigger);
 
 const About = () => {
-  // useGSAP(() => {
-  //   gsap.utils.toArray(".fadeUpOnScroll").forEach((element) => {
-  //     gsap.from(element, {
-  //       scrollTrigger: {
-  //         trigger: element,
-  //         start: "top 97%",
-  //         end: "bottom 20%",
-  //         toggleActions: "play reverse play reverse",
-  //       },
-  //       opacity: 0,
-  //       y: 40,
-  //       duration: 0.6,
-  //       ease: "power2.out",
-  //       stagger:0.5
-  //     });
-  //   });
-  // });
 
   useGSAP(() => {
     const titleSplit = SplitText.create("#about h2", { type: "words" });
@@ -58,7 +41,6 @@ const About = () => {
     });
   });
   
-
   return (
     <div id="about">
       <div className="mb-16 md:px-0 px-5">
